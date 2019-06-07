@@ -1,12 +1,12 @@
 import React from 'react';
-import fetchApi from './util/fetchApi';
+// import fetchApi from './util/fetchApi';
 import Home from "./Home";
 
 
-const request = {
-  "start": 50,
-  "count":15
-}
+// const request = {
+//   "start": 50,
+//   "count":15
+// }
 
 function App() {
   return (
