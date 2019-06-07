@@ -17,8 +17,9 @@ const fetchApi = {
             params: request  
         })
             .then(res => {
-                console.log(res.data);
-                callback(res);
+                console.log("+++++++++++++++++", res.data.subjects);
+                const data = res.data.subjects;
+                callback(data);
             })
             .catch(err=>console.log(err));
     }

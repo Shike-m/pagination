@@ -13,7 +13,7 @@ function App() {
     <div>
       <Home />
       {
-        fetchApi.RestApi("/v2/movie/top250", "GET",request)
+        // fetchApi.RestApi("/v2/movie/top250", "GET",request)
       }
     </div>
   );

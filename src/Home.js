@@ -16,7 +16,7 @@ const useStyles = makeStyles({
         overflowX: 'auto',
     },
     table: {
-        minWidth:350
+        minWidth: 350
     }
 })
 class Home extends Component {
@@ -24,19 +24,20 @@ class Home extends Component {
         start: 0,
         count: 20,
         total: 250,
-        pagination: (res,callback) => {
+        pagination: (res, callback) => {
             paginations.pagination(res, callback);
         },
-        data:[]
+        data: []
     }
     request = {}
-    getdata = (res) => {
+    getdata = (data) => {
+        console.log("===============",data)
         this.setState({
-            data:res.subjects
+            data
         })
     }
     componentDidMount() {
-        fetchApi.RestApi("/v2/movie/top250", "GET",this.request,this.getData);
+        fetchApi.RestApi("/v2/movie/top250", "GET", this.request, this.getData);
     }
 
     render() {
@@ -50,12 +51,24 @@ class Home extends Component {
                                 <TableCell>Movie Name</TableCell>
                                 <TableCell>Issued Year</TableCell>
                                 <TableCell>Average Rating</TableCell>
+                                <TableCell>casts</TableCell>
                                 <TableCell>Post Pic</TableCell>
                             </TableRow>
                         </TableHead>
                         <TableBody>
+                            {console.log("===================",this.state.data)}
                             {
-
+                                this.state.data.map(item =>
+                                    (<TableRow key={item.id}>
+                                        <TableCell>{item.original_title}</TableCell>
+                                        <TableCell>{item.year}</TableCell>
+                                        <TableCell>{item.rating.average}</TableCell>
+                                        <TableCell>{item.casts.map(cast =>
+                                            <p>{cast.name_en}</p>
+                                            ).join(",")}</TableCell>
+                                        <TableCell>{item.images.small}</TableCell>
+                                    </TableRow>)
+                                )
                             }
                         </TableBody>
                     </Table>
