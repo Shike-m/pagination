@@ -5,21 +5,19 @@ import TableHead from '@material-ui/core/TableHead';
 import TableRow from '@material-ui/core/TableHead';
 import TableCell from '@material-ui/core/TableCell';
 import { TableBody } from '@material-ui/core';
-import paginations from './util/paginations';
+import TablePagination from '@material-ui/core/TablePagination';
 import fetchApi from './util/fetchApi';
 
 class Home extends Component {
     constructor(props) {
         super(props);
         this.state = {
-            start: 0,
+            page: 0,
             count: 10,
             total: 250,
-            pagination: (res, callback) => {
-                paginations.pagination(res, callback);
-            },
             data: [],
-            isGoTop: false
+            isGoTop: false,
+            
         };
         this.getData = this.getData.bind(this);
     }
@@ -28,7 +26,6 @@ class Home extends Component {
     getData(data) {
 
         if (data.length > 0) {
-            // console.log("===============", data)
             this.setState({
                 data
             })
@@ -42,7 +39,7 @@ class Home extends Component {
         window.removeEventListener('scroll', this.ChangeGoTopStatus);
     }
     ChangeGoTopStatus = () => {
-        console.log(document.documentElement.scrollTop)
+
         let HL = document.documentElement.scrollTop;
         if (HL > 400) {
             this.setState({
@@ -61,6 +58,27 @@ class Home extends Component {
     }
     handleGoTop = () => {
         window.scrollTo(0, 0);
+    }
+
+    handleChangePage = (event,newPage) => {
+        this.setState({
+            page:newPage
+        },()=>{this.fetchData(this.state.page)})
+    }
+    handleChangeRowsPerPage = (e) => {
+        this.setState({
+            count: e.target.value
+        },()=>{this.fetchData(this.state.page)});
+        
+    }
+    fetchData = (page) => {
+        let pageRows = this.state.count;
+        let start = page * pageRows;
+        let request = {
+            "start": start,
+            "count": pageRows
+        }
+        fetchApi.RestApi("/v2/movie/top250", "GET", request, this.getData);
     }
     render() {
         return (
@@ -107,10 +125,29 @@ class Home extends Component {
                             }
                         </TableBody>
                     </Table>
+                    <div>
+
+                    </div>
+                    <p style={{float:"left",fontSize:'16px'}}>current page:<span>{this.state.page}</span></p>
+                    <TablePagination
+                        rowsPerPageOptions={[5, 10, 20]}
+                        component="div"
+                        count={this.state.total}
+                        rowsPerPage={this.state.count}
+                        page={this.state.page}
+                        backIconButtonProps={{
+                            'aria-label': 'Previous Page',
+                        }}
+                        nextIconButtonProps={{
+                            'aria-label': 'Next Page',
+                        }}
+                        onChangePage={this.handleChangePage}
+                        onChangeRowsPerPage={this.handleChangeRowsPerPage}
+                    />
                 </Paper>
                 {
                     this.state.isGoTop &&
-                    <span style={{ border: '1px solid red', width: '50px', height: '20px', position: 'fixed', right: '30px', bottom: '20px' }}
+                    <span style={{ border: '1px solid red', width: '50px', height: '30px', position: 'fixed', right: '30px', bottom: '50px' }}
                         onClick={this.handleGoTop}
                     >GoTop</span>
                 }
