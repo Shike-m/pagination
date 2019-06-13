@@ -8,6 +8,10 @@ import { TableBody } from '@material-ui/core';
 import TablePagination from '@material-ui/core/TablePagination';
 import fetchApi from './util/fetchApi';
 
+function FetchData(request, response) {
+    console.log("+++++++++++++++++++OK, for outside function.=======================")
+    fetchApi.RestApi("/v2/movie/top250", "GET", request, response);
+}
 class Home extends Component {
     constructor(props) {
         super(props);
@@ -32,7 +36,8 @@ class Home extends Component {
         }
     }
     componentDidMount() {
-        fetchApi.RestApi("/v2/movie/top250", "GET", this.request, this.getData);
+        // fetchApi.RestApi("/v2/movie/top250", "GET", this.request, this.getData);
+        FetchData(this.request,this.getData)
         window.addEventListener('scroll', this.ChangeGoTopStatus);
     }
     componentWillUnmount() {
@@ -78,7 +83,8 @@ class Home extends Component {
             "start": start,
             "count": pageRows
         }
-        fetchApi.RestApi("/v2/movie/top250", "GET", request, this.getData);
+        // fetchApi.RestApi("/v2/movie/top250", "GET", request, this.getData);
+        FetchData(request, this.getData);
     }
     render() {
         return (
@@ -156,5 +162,5 @@ class Home extends Component {
         )
     }
 }
-
+export { FetchData };
 export default Home;
